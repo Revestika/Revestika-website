@@ -984,16 +984,75 @@ footer {
     .feature-img, .product-img, .gallery-item {
         height: 220px;
     }
+    
+    /* Mejoras para móviles - tablets */
+    .logo {
+        font-size: 24px;
+    }
+    
+    .logo::after {
+        font-size: 10px;
+        left: -12px;
+    }
+    
+    .product-content h3 {
+        font-size: 16px;
+    }
+    
+    .product-price {
+        font-size: 15px;
+    }
 }
 
 @media (max-width: 576px) {
-    .hero h1 {
-        font-size: 28px;
+    /* Ajustes mejorados para móviles */
+    h1 {
+        font-size: 28px !important;
+    }
+    
+    h2 {
+        font-size: 24px !important;
+    }
+    
+    h3 {
+        font-size: 18px !important;
+    }
+    
+    p {
+        font-size: 16px !important;
     }
     
     .btn {
         padding: 10px 20px;
         font-size: 13px;
+    }
+    
+    /* Ajustar espaciado */
+    .container {
+        padding: 0 15px;
+    }
+    
+    /* Ajustar secciones */
+    section {
+        padding: 40px 0 !important;
+    }
+    
+    /* Hero más compacto */
+    .hero {
+        height: auto !important;
+        min-height: 80vh;
+        padding-top: 80px;
+    }
+    
+    /* Arreglar encabezado móvil */
+    .header-container {
+        padding: 10px 0;
+    }
+    
+    /* Mejorar visualización del menú móvil */
+    .mobile-menu {
+        font-size: 28px;
+        padding: 5px 10px;
     }
     
     .products-filter {
@@ -1008,7 +1067,76 @@ footer {
     .contact-form, .contact-info {
         padding: 0;
     }
+    
+    /* Mejorar tarjetas de productos en móvil */
+    .product-card {
+        margin-bottom: 20px;
+    }
+    
+    .product-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .product-price {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+    
+    .product-actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .view-btn {
+        padding: 8px 12px;
+    }
+    
+    /* Mejorar visualización de imágenes en galerías */
+    .gallery-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .gallery-item {
+        height: 200px;
+    }
+    
+    .feature-img {
+        height: 180px;
+    }
+    
+    /* Mejorar formulario en móvil */
+    .contact-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-info {
+        margin-bottom: 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-control {
+        padding: 10px;
+    }
+    
+    textarea.form-control {
+        height: 100px;
+    }
+    
+    /* Ajustes para la sección de características */
+    .features-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-card {
+        margin-bottom: 20px;
+    }
 }
+
 /* Estilos para el carrusel del hero */
 .hero {
     position: relative;
@@ -1056,3 +1184,5 @@ footer {
         right: 10px;
     }
 }
+
+/*
