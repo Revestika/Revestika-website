@@ -1,0 +1,153 @@
+/* Estilos completamente nuevos para el modal */
+.product-modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9998;
+}
+
+.product-modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.product-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #4a4a4a;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.product-modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: white;
+}
+
+.product-modal-body {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.product-modal-images {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.product-modal-images img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.product-modal-details {
+    flex: 1;
+    min-width: 250px;
+}
+
+.product-details-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.product-details-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e67e22;
+    color: #2c3e50;
+    font-size: 18px;
+}
+
+.product-details-section ul {
+    list-style-type: disc;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.product-details-section ul li {
+    margin-bottom: 8px;
+}
+
+.product-details-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-details-section table tr {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 8px 0;
+}
+
+.product-details-section table tr:last-child {
+    border-bottom: none;
+}
+
+.product-details-section table td:first-child {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.product-modal-close {
+    cursor: pointer;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    transition: color 0.2s;
+}
+
+.product-modal-close:hover {
+    color: #e67e22;
+}
+
+/* Controla el scroll del body cuando el modal está abierto */
+body.modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .product-modal-body {
+        flex-direction: column;
+    }
+    
+    .product-modal-images {
+        width: 100%;
+    }
+}
