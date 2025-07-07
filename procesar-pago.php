@@ -118,7 +118,7 @@ try {
             return [
                 'id' => $item['id'],
                 'name' => $item['name'],
-                'price' => $item['price'] * 100,  // CONVERTIR A CENTAVOS
+                'amount' => $item['price'] * 100,  // OpenPay espera 'amount', no 'price'
                 'quantity' => $item['quantity']
             ];
         }, $orderItems),
@@ -135,7 +135,7 @@ try {
     logError("� Enviando order con amount en centavos: " . ($totalAmount * 100));
     logError("💱 Currency: ARS");
     logError("📦 Items count: " . count($orderData['items']));
-    logError("💵 First item price (centavos): " . ($orderItems[0]['price'] * 100));
+    logError("💵 First item amount (centavos): " . ($orderItems[0]['price'] * 100));
 
     // Enviar orden a OpenPay
     $ch = curl_init($orderUrl);
@@ -230,8 +230,8 @@ try {
         'debug' => [
             'total_pesos' => $totalAmount,
             'total_centavos_sent' => $totalAmount * 100,
-            'item_price_pesos' => $orderItems[0]['price'],
-            'item_price_centavos_sent' => $orderItems[0]['price'] * 100,
+            'item_amount_pesos' => $orderItems[0]['price'],
+            'item_amount_centavos_sent' => $orderItems[0]['price'] * 100,
             'openpay_response' => $result
         ]
     ]);
