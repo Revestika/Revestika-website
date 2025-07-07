@@ -13,30 +13,57 @@ document.addEventListener('DOMContentLoaded', function() {
     // 🔧 FUNCIÓN CRÍTICA: EXTRACCIÓN DE PRECIOS CORREGIDA
     // ====================================
     
-    // ✅ REEMPLAZAR la función extractPrice en cart.js (línea ~47)
+    // ✅ FUNCIÓN EXTRACTPRICE MEJORADA PARA EVITAR ERRORES DE OPENPAY
     function extractPrice(productCard) {
-        const priceText = productCard.querySelector('.product-price').textContent;
+        const priceElement = productCard.querySelector('.product-price');
+        if (!priceElement) {
+            console.error('❌ No se encontró .product-price en:', productCard);
+            throw new Error('Elemento de precio no encontrado');
+        }
+        
+        const priceText = priceElement.textContent.trim();
+        console.log('🔍 Procesando precio:', priceText);
+        
+        // Tomar solo la parte antes del guión si existe
         const pricePerPlate = priceText.split('-')[0].trim();
         
+        // 🔧 LIMPIEZA ROBUSTA DEL PRECIO
         let cleanPrice = pricePerPlate
-            .replace('$', '')
-            .replace('/placa', '')
-            .replace(/\s/g, '')
+            .replace(/\$/g, '')           // Remover símbolo $
+            .replace(/\/placa/g, '')      // Remover "/placa"
+            .replace(/\s+/g, '')          // Remover espacios
+            .replace(/[^\d.,]/g, '')      // Solo números, comas y puntos
             .trim();
         
-        // Manejar formato argentino (punto como separador de miles)
+        // 🔧 MANEJAR DIFERENTES FORMATOS ARGENTINOS
+        // Formato: 12.500 (punto como separador de miles)
         if (cleanPrice.includes('.') && !cleanPrice.includes(',')) {
             cleanPrice = cleanPrice.replace(/\./g, '');
+        }
+        // Formato: 12,500 (coma como separador de miles) 
+        else if (cleanPrice.includes(',') && !cleanPrice.includes('.')) {
+            cleanPrice = cleanPrice.replace(/,/g, '');
+        }
+        // Formato: 12.500,50 (punto miles, coma decimal)
+        else if (cleanPrice.includes('.') && cleanPrice.includes(',')) {
+            cleanPrice = cleanPrice.replace(/\./g, '').replace(',', '.');
         }
         
         const numericPrice = parseFloat(cleanPrice);
         
+        // 🔧 VALIDACIÓN ESTRICTA
         if (isNaN(numericPrice) || numericPrice <= 0) {
-            console.error('Error procesando precio:', priceText, 'Resultado:', numericPrice);
-            throw new Error('Precio inválido: ' + priceText);
+            console.error('❌ Error procesando precio:', {
+                original: priceText,
+                cleaned: cleanPrice,
+                result: numericPrice
+            });
+            throw new Error(`Precio inválido: ${priceText}`);
         }
         
-        return Math.round(numericPrice); // Redondear para precios enteros
+        const finalPrice = Math.round(numericPrice);
+        console.log(`✅ Precio procesado: "${priceText}" -> ${finalPrice}`);
+        return finalPrice;
     }
 
     // ✅ AGREGAR función para limpiar carrito después del pago exitoso
@@ -395,14 +422,47 @@ document.addEventListener('DOMContentLoaded', function() {
             const customerData = InputSanitizer.sanitizeCustomerData(rawCustomerData);
             rateLimiter.recordAttempt();
             
+            // 🔧 VALIDACIÓN ROBUSTA DE DATOS ANTES DEL ENVÍO
+            const validatedCart = cart.map(item => {
+                const price = parseFloat(item.price);
+                const quantity = parseInt(item.quantity);
+                
+                if (isNaN(price) || price <= 0) {
+                    throw new Error(`Precio inválido en ${item.name}: ${item.price}`);
+                }
+                
+                if (isNaN(quantity) || quantity <= 0) {
+                    throw new Error(`Cantidad inválida en ${item.name}: ${item.quantity}`);
+                }
+                
+                return {
+                    id: item.id,
+                    name: item.name,
+                    price: price,  // ASEGURAR QUE ES NÚMERO
+                    quantity: quantity,  // ASEGURAR QUE ES NÚMERO
+                    image: item.image
+                };
+            });
+            
+            const total = validatedCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            if (total <= 0) {
+                throw new Error('El total debe ser mayor a 0');
+            }
+            
+            if (total < 1000) {
+                throw new Error('El monto mínimo es $1.000');
+            }
+            
             const paymentData = {
-                cart: cart,
+                cart: validatedCart,
                 customer: customerData,
-                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                total: total,
                 timestamp: new Date().toISOString()
             };
             
-            console.log('🔍 Enviando a OpenPay:', paymentData);
+            console.log('🔍 Datos validados para OpenPay:', paymentData);
+            console.log('💰 Total calculado:', total);
             
             const response = await fetch('procesar-pago.php', {
                 method: 'POST',
