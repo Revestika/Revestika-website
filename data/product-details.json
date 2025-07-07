@@ -1,0 +1,161 @@
+{
+    "product-1": {
+        "name": "Panel SPC - Marquina Blanco",
+        "images": ["blanco.jpeg"],
+        "material": "Stone Polymer Composite (SPC)",
+        "resistencia": "Alta resistencia a golpes y rayones",
+        "usos": ["Interior", "Revestimiento de paredes", "Decoración"],
+        "colores": ["Blanco", "Gris claro"],
+        "instalacion": "Instalacion con adhesivo especial para SPC",
+        "medidas": {
+            "largo": "2440mm",
+            "ancho": "1220mm",
+            "espesor": "3mm"
+        },
+        "densidad": "2000 kg/m³",
+        "caracteristicas": [
+            "Resistente al agua",
+            "Resistente al calor",
+            "No decolora",
+            "Textura realista",
+            "Fácil limpieza",
+            "Fácil instalación"
+        ]
+    },
+    "product-2": {
+        "name": "Panel SPC Marquina Negro",
+        "images": ["negra.jpeg"],
+        "material": "Stone Polymer Composite (SPC)",
+        "resistencia": "Alta resistencia a golpes y rayones",
+        "usos": ["Interior", "Revestimiento de paredes", "Decoración"],
+        "colores": ["Negro", "Gris oscuro"],
+        "instalacion": "Instalacion con adhesivo especial para SPC",
+        "medidas": {
+            "largo": "2440mm",
+            "ancho": "1220mm",
+            "espesor": "3mm"
+        },
+        "densidad": "2000 kg/m³",
+        "caracteristicas": [
+            "Resistente al agua",
+            "Resistente al calor",
+            "No decolora",
+            "Textura realista",
+            "Fácil limpieza",
+            "Fácil instalación"
+        ]
+    },
+    "product-3": {
+        "name": "Panel SPC Gris claro",
+        "images": ["gris.jpeg"],
+        "material": "Stone Polymer Composite (SPC)",
+        "resistencia": "Alta resistencia a impactos",
+        "usos": ["Interior", "Espacios modernos", "Revestimiento"],
+        "colores": ["Gris claro", "Gris medio"],
+        "instalacion": "Instalación con adhesivo especial para SPC",
+        "medidas": {
+            "largo": "2440mm",
+            "ancho": "1220mm",
+            "espesor": "3mm"
+        },
+        "densidad": "2000 kg/m³",
+        "caracteristicas": [
+            "Resistente al agua",
+            "Resistente al calor",
+            "No decolora",
+            "Textura realista",
+            "Fácil limpieza",
+            "Fácil instalación"
+        ]
+    },
+    "product-4": {
+        "name": "Panel SPC Calacatta Blanco",
+        "images": ["vetas.jpeg"],
+        "material": "Stone Polymer Composite (SPC)",
+        "resistencia": "Alta durabilidad",
+        "usos": ["Interior", "Decoración", "Revestimiento"],
+        "colores": ["Blanco con vetas naturales"],
+        "instalacion": "Instalación con adhesivo especial para SPC",
+        "medidas": {
+           "largo": "2440mm",
+            "ancho": "1220mm",
+            "espesor": "3mm"
+        },
+        "densidad": "2000 kg/m³",
+        "caracteristicas": [
+            "Resistente al agua",
+            "Resistente al calor",
+            "No decolora",
+            "Textura realista",
+            "Fácil limpieza",
+            "Fácil instalación"
+        ]
+    },
+    "product-5": {
+        "name": "Panel SPC piedra con textura gris",
+        "images": ["textu gris.jpg"],
+        "material": "Stone Polymer Composite (SPC)",
+        "resistencia": "Alta durabilidad",
+        "usos": ["Interior", "Espacios modernos", "Revestimiento"],
+        "colores": ["Gris con textura"],
+        "instalacion": "Instalación con adhesivo especial para SPC",
+        "medidas": {
+            "largo": "2440mm",
+            "ancho": "1220mm",
+            "espesor": "3mm"
+        },
+        "densidad": "2000 kg/m³",
+        "caracteristicas": [
+            "Resistente al agua",
+            "Resistente al calor",
+            "No decolora",
+            "Textura realista",
+            "Fácil limpieza",
+            "Fácil instalación"
+        ]
+    },
+    "product-6": {
+        "name": "Panel SPC piedra con textura beige",
+        "images": ["textu beige.jpg"],
+        "material": "Stone Polymer Composite (SPC)",
+        "resistencia": "Alta durabilidad",
+        "usos": ["Interior", "Espacios cálidos", "Revestimiento"],
+        "colores": ["Beige natural"],
+        "instalacion": "Instalación con adhesivo especial para SPC",
+        "medidas": {
+            "largo": "2440mm",
+            "ancho": "1220mm",
+            "espesor": "3mm"
+        },
+        "densidad": "2000 kg/m³",
+        "caracteristicas": [
+            "Resistente al agua",
+            "Resistente al calor",
+            "No decolora",
+            "Textura realista",
+            "Fácil limpieza",
+            "Fácil instalación"
+        ]
+    },
+    "product-7": {
+        "name": "Panel MDF Madera Natural",
+        "images": ["mdfmarron.jpg"],
+        "material": "Medium Density Fiberboard (MDF)",
+        "resistencia": "Alta durabilidad y resistencia estructural",
+        "usos": ["Interior", "Revestimiento de paredes", "Acústica"],
+        "colores": ["Marrón natural", "Tonos madera"],
+        "instalacion": "Instalación con adhesivo especial para MDF",
+        "medidas": {
+            "largo": "2400mm",
+            "ancho": "285mm",
+            "espesor": "21mm"
+        },
+        "densidad": "700 kg/m³",
+        "caracteristicas": [
+            "Acabado natural",
+            "Propiedades acústicas",
+            "Textura realista",
+            "Fácil instalación"
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Bloquear archivos sensibles
+Disallow: /logs/
+Disallow: /cache/
+Disallow: /orders/
+Disallow: /.env
+Disallow: /config-openpay.php
+Disallow: /procesar-pago.php
+Disallow: /webhook-openpay.php
+Disallow: /verificar-produccion.php
+Disallow: /verificar-seguridad.php
+Disallow: /setup-production.php
+
+# Archivos temporales
+Disallow: /*.tmp
+Disallow: /*.log
+Disallow: /*.bak
+
+# Sitemap
+Sitemap: https://revestika.com.ar/sitemap.xml
+
+# Rastreo específico
+Crawl-delay: 1

@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Placas Gratis - Revestika | Calcula SPC y MDF</title>
+    <meta name="description" content="Calculadora gratuita para paneles SPC y MDF. Calcula exactamente cuántas placas necesitas para tu proyecto. Incluye aberturas y presupuesto.">
+    <meta name="keywords" content="calculadora placas spc, calculadora mdf, cuantas placas necesito, presupuesto revestimientos">
+    <link rel="canonical" href="https://revestika.com.ar/calculadora.html">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/lazy-loading.css">
+    <style>
+        :root {
+            --primary-color: #222222;
+            --secondary-color: #444444;
+            --accent-color: #c9a86a;
+            --light-color: #f5f5f5;
+            --text-color: #333;
+            --white: #fff;
+            --dark-gray: #333;
+            --medium-gray: #666;
+            --light-gray: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .calculator-header h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calculator-header p {
+            font-size: 14px;
+            color: var(--medium-gray);
+            line-height: 1.5;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+            .calculator-header h1 {
+                font-size: 32px;
+            }
+            
+            .calculator-header p {
+                font-size: 16px;
+            }
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Desktop - lado a lado */
+        @media (min-width: 992px) {
+            .calculator-container {
+                grid-template-columns: 1.2fr 1.8fr;
+                gap: 40px;
+                padding: 40px;
+            }
+        }
+
+        .calculator-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-section {
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .form-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        /* Tablet y desktop */
+        @media (min-width: 768px) {
+            .form-section {
+                padding: 25px;
+            }
+            
+            .form-section h3 {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark-gray);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="number"], select {
+            padding: 15px 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background: var(--white);
+            width: 100%;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(201, 168, 106, 0.1);
+        }
+
+        /* Evitar zoom en iOS */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            input[type="number"] {
+                font-size: 16px;
+            }
+        }
+
+        .panel-selector {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .panel-option {
+            padding: 20px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Tablet y desktop */
+        @media (min-width: 768px) {
+            .panel-selector {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .panel-option {
+                padding: 15px;
+            }
+        }
+
+        .panel-option:hover {
+            border-color: var(--accent-color);
+        }
+
+        .panel-option.selected {
+            border-color: var(--accent-color);
+            background: rgba(201, 168, 106, 0.1);
+        }
+
+        .panel-option h4 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .panel-option p {
+            font-size: 12px;
+            color: var(--medium-gray);
+        }
+
+        .coverage-selector {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .coverage-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .coverage-option {
+            padding: 15px 10px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+            font-weight: 600;
+        }
+
+        /* Tablet y desktop */
+        @media (min-width: 768px) {
+            .coverage-options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .coverage-option {
+                padding: 10px;
+            }
+        }
+
+        .coverage-option:hover {
+            border-color: var(--accent-color);
+        }
+
+        .coverage-option.selected {
+            border-color: var(--accent-color);
+            background: rgba(201, 168, 106, 0.1);
+        }
+
+        .openings-list {
+            margin-top: 15px;
+        }
+
+        .opening-item {
+            display: grid;
+            grid-template-columns: 1fr 60px 60px 40px;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 15px 10px;
+            background: var(--white);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Tablet y desktop */
+        @media (min-width: 768px) {
+            .opening-item {
+                grid-template-columns: 1fr 80px 80px 40px;
+                gap: 10px;
+                padding: 10px;
+            }
+        }
+
+        .btn {
+            padding: 15px 25px;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+            width: 100%;
+            min-height: 50px;
+        }
+
+        .btn:hover {
+            background: var(--accent-color);
+        }
+
+        .btn-secondary {
+            background: var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+        }
+
+        .btn-small {
+            padding: 12px 20px;
+            font-size: 14px;
+            min-height: 45px;
+        }
+
+        .btn-remove {
+            background: #e74c3c;
+            padding: 10px;
+            font-size: 14px;
+            min-height: 40px;
+            width: auto;
+        }
+
+        .btn-remove:hover {
+            background: #c0392b;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+            .btn {
+                width: auto;
+                padding: 12px 25px;
+                font-size: 14px;
+                min-height: auto;
+            }
+            
+            .btn-small {
+                padding: 8px 15px;
+                font-size: 12px;
+                min-height: auto;
+            }
+            
+            .btn-remove {
+                padding: 8px;
+                font-size: 12px;
+                min-height: auto;
+            }
+        }
+
+        .results-panel {
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+            box-sizing: border-box;
+        }
+
+        .results-panel h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+            min-height: 60px;
+            margin: 0;
+        }
+
+        .result-label {
+            color: var(--medium-gray);
+            font-weight: 500;
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .result-value {
+            color: var(--primary-color);
+            font-weight: 600;
+            flex: 0 0 auto;
+            min-width: 100px;
+            text-align: right;
+            font-size: 14px;
+            padding-left: 15px;
+            line-height: 1.3;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+            .results-panel {
+                padding: 30px;
+            }
+            
+            .results-panel h3 {
+                font-size: 20px;
+                margin-bottom: 25px;
+                text-align: left;
+            }
+            
+            .result-item {
+                padding: 12px 0;
+                min-height: 50px;
+            }
+            
+            .result-label, .result-value {
+                font-size: 13px;
+            }
+            
+            .result-value {
+                min-width: 140px;
+                padding-left: 20px;
+            }
+        }
+
+        .total-highlight {
+            background: rgba(201, 168, 106, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .contact-cta {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .contact-cta h4 {
+            margin-bottom: 10px;
+        }
+
+        .contact-cta p {
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        /* Info helper para explicar la nueva funcionalidad */
+        .calculation-info {
+            background: rgba(201, 168, 106, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .calculation-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .calculation-info p {
+            font-size: 14px;
+            color: var(--medium-gray);
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+            .calculation-info {
+                padding: 15px;
+            }
+            
+            .calculation-info h4 {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+            
+            .calculation-info p {
+                font-size: 13px;
+                margin: 5px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .coverage-options {
+                grid-template-columns: 1fr;
+            }
+
+            .opening-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        .contact-cta .btn {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--white);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="index.html" style="color: var(--accent-color); text-decoration: none; font-weight: 500;">
+                ← Volver a Revestika
+            </a>
+        </div>
+        <div class="calculator-header">
+            <h1>Calculadora de Placas</h1>
+            <p>Calcula exactamente cuántas placas necesitas para tu proyecto</p>
+        </div>
+
+        <div class="calculation-info">
+            <h4>💡 Nueva funcionalidad:</h4>
+            <p>• <strong>3 medidas:</strong> Calcula para todo el ambiente (todas las paredes)</p>
+            <p>• <strong>2 medidas:</strong> Calcula para una superficie específica (ancho × alto)</p>
+            <p>• Completa al menos 2 de los 3 campos para obtener resultados</p>
+        </div>
+
+        <div class="calculator-container">
+            <div class="calculator-form">
+                <!-- Tipo de Panel -->
+                <div class="form-section">
+                    <h3>Tipo de Panel</h3>
+                    <div class="panel-selector">
+                        <div class="panel-option" data-panel="spc">
+                            <h4>Paneles SPC</h4>
+                            <p>2440mm x 1220mm<br>Cobertura total</p>
+                        </div>
+                        <div class="panel-option" data-panel="mdf">
+                            <h4>Paneles MDF</h4>
+                            <p>2400mm x 285mm<br>Cobertura variable</p>
+                        </div>
+                    </div>
+                    
+                    <div class="coverage-selector" id="coverageSelector">
+                        <label>Porcentaje de superficie a cubrir:</label>
+                        <div class="coverage-options">
+                            <div class="coverage-option" data-coverage="50">50%</div>
+                            <div class="coverage-option" data-coverage="75">75%</div>
+                            <div class="coverage-option" data-coverage="100">100%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dimensiones del Ambiente -->
+                <div class="form-section">
+                    <h3>Dimensiones</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ancho">Ancho (m)</label>
+                            <input type="number" id="ancho" step="0.01" min="0" placeholder="Ej: 4.50">
+                        </div>
+                        <div class="form-group">
+                            <label for="largo">Largo (m)</label>
+                            <input type="number" id="largo" step="0.01" min="0" placeholder="Ej: 3.20">
+                        </div>
+                        <div class="form-group">
+                            <label for="alto">Alto (m)</label>
+                            <input type="number" id="alto" step="0.01" min="0" placeholder="Ej: 2.40">
+                        </div>
+                    </div>
+                    <div style="background: rgba(201, 168, 106, 0.1); padding: 15px; border-radius: 5px; margin-top: 15px;">
+                        <p style="font-size: 13px; color: var(--medium-gray); margin: 0;">
+                            <strong>Modo automático:</strong><br>
+                            • Con 3 valores: Calcula todas las paredes del ambiente<br>
+                            • Con 2 valores: Calcula superficie directa (útil para una pared específica)
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Aberturas -->
+                <div class="form-section">
+                    <h3>Aberturas y Elementos a Descontar</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="openingType">Tipo</label>
+                            <select id="openingType">
+                                <option value="puerta">Puerta</option>
+                                <option value="ventana">Ventana</option>
+                                <option value="espejo">Espejo</option>
+                                <option value="mueble">Mueble fijo</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="openingWidth">Ancho (m)</label>
+                            <input type="number" id="openingWidth" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="openingHeight">Alto (m)</label>
+                            <input type="number" id="openingHeight" step="0.01" min="0">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-small" id="addOpening">Agregar Abertura</button>
+                    
+                    <div class="openings-list" id="openingsList"></div>
+                </div>
+
+                <button type="button" class="btn" id="calculateBtn">Calcular Placas</button>
+            </div>
+
+            <div class="results-panel">
+                <h3>Resultados del Cálculo</h3>
+                
+                <div class="result-item">
+                    <span class="result-label">Tipo de cálculo:</span>
+                    <span class="result-value" id="calculationType">-</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Superficie total:</span>
+                    <span class="result-value" id="totalSurface">- m²</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Superficie de aberturas:</span>
+                    <span class="result-value" id="openingsSurface">- m²</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Superficie neta a cubrir:</span>
+                    <span class="result-value" id="netSurface">- m²</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Cantidad de placas necesarias:</span>
+                    <span class="result-value" id="panelsNeeded">- placas</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Precio estimado:</span>
+                    <span class="result-value" id="estimatedPrice">-</span>
+                </div>
+
+                <div class="total-highlight" id="summary" style="display: none;">
+                    <h4>Resumen del Proyecto</h4>
+                    <p id="summaryText"></p>
+                </div>
+
+                <div class="contact-cta">
+                    <h4>¿Listo para tu proyecto?</h4>
+                    <p>Contactanos para recibir una cotización personalizada</p>
+                    <a href="#" class="btn btn-secondary" id="whatsappBtn">Contactarse por WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let selectedPanel = null;
+        let selectedCoverage = 100;
+        let openings = [];
+
+        // Precios por placa
+        const prices = {
+            spc: 69970,
+            mdf: 58401
+        };
+
+        // Dimensiones de placas en metros
+        const panelDimensions = {
+            spc: { width: 1.220, height: 2.440, area: 1.220 * 2.440 },
+            mdf: { width: 0.285, height: 2.400, area: 0.285 * 2.400 }
+        };
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePanelSelector();
+            initializeCoverageSelector();
+            initializeOpeningsHandler();
+            initializeCalculator();
+        });
+
+        function initializePanelSelector() {
+            const panelOptions = document.querySelectorAll('.panel-option');
+            const coverageSelector = document.getElementById('coverageSelector');
+
+            panelOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remover selección anterior
+                    panelOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Seleccionar nuevo panel
+                    this.classList.add('selected');
+                    selectedPanel = this.dataset.panel;
+
+                    // Mostrar/ocultar selector de cobertura para MDF
+                    if (selectedPanel === 'mdf') {
+                        coverageSelector.style.display = 'block';
+                    } else {
+                        coverageSelector.style.display = 'none';
+                        selectedCoverage = 100;
+                    }
+
+                    updateCalculation();
+                });
+            });
+        }
+
+        function initializeCoverageSelector() {
+            const coverageOptions = document.querySelectorAll('.coverage-option');
+
+            coverageOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    coverageOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedCoverage = parseInt(this.dataset.coverage);
+                    updateCalculation();
+                });
+            });
+
+            // Seleccionar 100% por defecto
+            document.querySelector('[data-coverage="100"]').classList.add('selected');
+        }
+
+        function initializeOpeningsHandler() {
+            const addBtn = document.getElementById('addOpening');
+            
+            addBtn.addEventListener('click', function() {
+                const type = document.getElementById('openingType').value;
+                const width = parseFloat(document.getElementById('openingWidth').value);
+                const height = parseFloat(document.getElementById('openingHeight').value);
+
+                if (width > 0 && height > 0) {
+                    addOpening(type, width, height);
+                    // Limpiar campos
+                    document.getElementById('openingWidth').value = '';
+                    document.getElementById('openingHeight').value = '';
+                }
+            });
+        }
+
+        function addOpening(type, width, height) {
+            const opening = { type, width, height, area: width * height };
+            openings.push(opening);
+            renderOpenings();
+            updateCalculation();
+        }
+
+        function removeOpening(index) {
+            openings.splice(index, 1);
+            renderOpenings();
+            updateCalculation();
+        }
+
+        function renderOpenings() {
+            const container = document.getElementById('openingsList');
+            
+            if (openings.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = openings.map((opening, index) => `
+                <div class="opening-item">
+                    <span>${opening.type.charAt(0).toUpperCase() + opening.type.slice(1)}</span>
+                    <span>${opening.width}m</span>
+                    <span>${opening.height}m</span>
+                    <button class="btn btn-remove btn-small" onclick="removeOpening(${index})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function initializeCalculator() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            const inputs = document.querySelectorAll('input[type="number"]');
+
+            calculateBtn.addEventListener('click', updateCalculation);
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', updateCalculation);
+            });
+        }
+
+        function updateCalculation() {
+            const ancho = parseFloat(document.getElementById('ancho').value) || 0;
+            const largo = parseFloat(document.getElementById('largo').value) || 0;
+            const alto = parseFloat(document.getElementById('alto').value) || 0;
+
+            if (!selectedPanel) {
+                clearResults();
+                return;
+            }
+
+            // Contar cuántos campos tienen valores
+            const filledFields = [ancho, largo, alto].filter(val => val > 0).length;
+
+            if (filledFields < 2) {
+                clearResults();
+                return;
+            }
+
+            let totalSurface = 0;
+            let calculationType = '';
+
+            // Determinar tipo de cálculo basado en los campos completados
+            if (ancho > 0 && largo > 0 && alto > 0) {
+                // 3 campos = Ambiente completo (todas las paredes)
+                totalSurface = 2 * (ancho * alto) + 2 * (largo * alto);
+                calculationType = 'Ambiente completo';
+            } else if (ancho > 0 && alto > 0) {
+                // Ancho y Alto = Superficie directa
+                totalSurface = ancho * alto;
+                calculationType = 'Superficie directa';
+            } else if (largo > 0 && alto > 0) {
+                // Largo y Alto = Superficie directa
+                totalSurface = largo * alto;
+                calculationType = 'Superficie directa';
+            } else if (ancho > 0 && largo > 0) {
+                // Ancho y Largo = Superficie directa (asumiendo alto estándar)
+                // En este caso usamos un alto estándar de 2.5m
+                totalSurface = ancho * largo;
+                calculationType = 'Superficie piso/techo';
+            }
+
+            // Calcular superficie de aberturas
+            const openingsSurface = openings.reduce((sum, opening) => sum + opening.area, 0);
+
+            // Superficie neta
+            let netSurface = totalSurface - openingsSurface;
+            
+            // Aplicar porcentaje de cobertura para MDF
+            if (selectedPanel === 'mdf') {
+                netSurface = netSurface * (selectedCoverage / 100);
+            }
+
+            // Calcular cantidad de placas
+            const panelArea = panelDimensions[selectedPanel].area;
+            const panelsNeeded = Math.ceil(netSurface / panelArea);
+
+            // Calcular precio estimado
+            const estimatedPrice = panelsNeeded * prices[selectedPanel];
+
+            // Mostrar resultados
+            displayResults(calculationType, totalSurface, openingsSurface, netSurface, panelsNeeded, estimatedPrice);
+        }
+
+        function displayResults(calculationType, totalSurface, openingsSurface, netSurface, panelsNeeded, estimatedPrice) {
+            document.getElementById('calculationType').textContent = calculationType;
+            document.getElementById('totalSurface').textContent = totalSurface.toFixed(2) + ' m²';
+            document.getElementById('openingsSurface').textContent = openingsSurface.toFixed(2) + ' m²';
+            document.getElementById('netSurface').textContent = netSurface.toFixed(2) + ' m²';
+            document.getElementById('panelsNeeded').textContent = panelsNeeded + ' placas';
+            document.getElementById('estimatedPrice').textContent = '$' + estimatedPrice.toLocaleString();
+
+            // Mostrar resumen
+            const summary = document.getElementById('summary');
+            const summaryText = document.getElementById('summaryText');
+            
+            const panelType = selectedPanel === 'spc' ? 'SPC' : 'MDF';
+            const coverageText = selectedPanel === 'mdf' ? ` con ${selectedCoverage}% de cobertura` : '';
+            
+            summaryText.textContent = `Cálculo: ${calculationType}. Necesitas ${panelsNeeded} placas ${panelType}${coverageText} para cubrir ${netSurface.toFixed(2)} m² de superficie.`;
+            summary.style.display = 'block';
+        }
+
+        function clearResults() {
+            document.getElementById('calculationType').textContent = '-';
+            document.getElementById('totalSurface').textContent = '- m²';
+            document.getElementById('openingsSurface').textContent = '- m²';
+            document.getElementById('netSurface').textContent = '- m²';
+            document.getElementById('panelsNeeded').textContent = '- placas';
+            document.getElementById('estimatedPrice').textContent = '-';
+            document.getElementById('summary').style.display = 'none';
+        }
+
+        // Función para generar mensaje de WhatsApp con resultados
+        function generateWhatsAppMessage() {
+            const ancho = parseFloat(document.getElementById('ancho').value) || 0;
+            const largo = parseFloat(document.getElementById('largo').value) || 0;
+            const alto = parseFloat(document.getElementById('alto').value) || 0;
+    
+            if (!selectedPanel) {
+                return "Hola! Estoy interesado en sus paneles decorativos. Me gustaría recibir más información y una cotización.";
+            }
+
+            const filledFields = [ancho, largo, alto].filter(val => val > 0).length;
+            if (filledFields < 2) {
+                return "Hola! Estoy interesado en sus paneles decorativos. Me gustaría recibir más información y una cotización.";
+            }
+
+            // Determinar tipo de cálculo y superficie
+            let totalSurface = 0;
+            let calculationType = '';
+            let dimensionsText = '';
+
+            if (ancho > 0 && largo > 0 && alto > 0) {
+                totalSurface = 2 * (ancho * alto) + 2 * (largo * alto);
+                calculationType = 'Ambiente completo';
+                dimensionsText = `📐 *DIMENSIONES DEL AMBIENTE:*\n• Ancho: ${ancho}m\n• Largo: ${largo}m\n• Alto: ${alto}m\n\n`;
+            } else if (ancho > 0 && alto > 0) {
+                totalSurface = ancho * alto;
+                calculationType = 'Superficie directa';
+                dimensionsText = `📐 *SUPERFICIE DIRECTA:*\n• Ancho: ${ancho}m\n• Alto: ${alto}m\n\n`;
+            } else if (largo > 0 && alto > 0) {
+                totalSurface = largo * alto;
+                calculationType = 'Superficie directa';
+                dimensionsText = `📐 *SUPERFICIE DIRECTA:*\n• Largo: ${largo}m\n• Alto: ${alto}m\n\n`;
+            } else if (ancho > 0 && largo > 0) {
+                totalSurface = ancho * largo;
+                calculationType = 'Superficie piso/techo';
+                dimensionsText = `📐 *SUPERFICIE PISO/TECHO:*\n• Ancho: ${ancho}m\n• Largo: ${largo}m\n\n`;
+            }
+
+            // Calcular resto de valores
+            const openingsSurface = openings.reduce((sum, opening) => sum + opening.area, 0);
+            let netSurface = totalSurface - openingsSurface;
+    
+            if (selectedPanel === 'mdf') {
+                netSurface = netSurface * (selectedCoverage / 100);
+            }
+    
+            const panelArea = panelDimensions[selectedPanel].area;
+            const panelsNeeded = Math.ceil(netSurface / panelArea);
+            const estimatedPrice = panelsNeeded * prices[selectedPanel];
+    
+            // Generar mensaje detallado
+            const panelType = selectedPanel === 'spc' ? 'SPC' : 'MDF';
+            const coverageText = selectedPanel === 'mdf' ? ` (${selectedCoverage}% cobertura)` : '';
+    
+            let message = `🏠 *SOLICITUD DE COTIZACIÓN*\n\n`;
+            message += `Hola! Usé su calculadora de placas y estos son mis resultados:\n\n`;
+            message += `🎯 *TIPO DE CÁLCULO:* ${calculationType}\n\n`;
+            message += dimensionsText;
+    
+            if (openings.length > 0) {
+                message += `🚪 *ABERTURAS A DESCONTAR:*\n`;
+                openings.forEach((opening, index) => {
+                    message += `• ${opening.type}: ${opening.width}m x ${opening.height}m\n`;
+                });
+            }
+    
+            message += `📊 *RESULTADOS DEL CÁLCULO:*\n`;
+            message += `• Tipo de panel: ${panelType}${coverageText}\n`;
+            message += `• Superficie total: ${totalSurface.toFixed(2)} m²\n`;
+            message += `• Superficie neta: ${netSurface.toFixed(2)} m²\n`;
+            message += `• Placas necesarias: ${panelsNeeded} unidades\n`;
+            message += `• Precio estimado: ${estimatedPrice.toLocaleString()}\n\n`;
+            message += `¿Podrían confirmarme la cotización y disponibilidad? ¡Gracias!`;
+    
+            return message;
+        }
+
+        // Event listener para el botón de WhatsApp
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar event listener para WhatsApp
+            document.getElementById('whatsappBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                const message = generateWhatsAppMessage();
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/5492213176973?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+            });
+        });
+    </script>
+    <script src="js/lazy-loading.js"></script>
+</body>
+</html>

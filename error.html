@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Revestika</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #222222;
+            --secondary-color: #444444;
+            --accent-color: #c9a86a;
+            --light-color: #f5f5f5;
+            --text-color: #333;
+            --white: #fff;
+            --medium-gray: #666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-color) 0%, #e8e8e8 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .error-container {
+            background: var(--white);
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .error-title {
+            color: var(--primary-color);
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .error-message {
+            color: var(--medium-gray);
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .error-info {
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .error-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .error-info p {
+            font-size: 14px;
+            color: var(--medium-gray);
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 30px 20px;
+            }
+            
+            .error-title {
+                font-size: 26px;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="logo">Revest<span>ika</span></div>
+        
+        <div class="error-icon">⚠️</div>
+        
+        <h1 class="error-title">Oops! Algo salió mal</h1>
+        
+        <p class="error-message">
+            No pudimos procesar tu solicitud en este momento. 
+            Esto podría deberse a un error temporal o a que la página que buscas no existe.
+        </p>
+
+        <div class="error-info">
+            <h4>¿Qué puedes hacer?</h4>
+            <p>• Verificar la URL e intentar nuevamente</p>
+            <p>• Volver a la página principal</p>
+            <p>• Contactarnos si el problema persiste</p>
+            <p>• Intentar nuevamente en unos minutos</p>
+        </div>
+
+        <div class="error-actions">
+            <a href="/" class="btn">Ir al Inicio</a>
+            <a href="/#productos" class="btn btn-secondary">Ver Productos</a>
+            <a href="https://wa.me/5492213176973?text=Hola! Estoy teniendo problemas técnicos en la web." 
+               class="btn btn-secondary" target="_blank">
+               Contactar Soporte
+            </a>
+        </div>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="font-size: 14px; color: var(--medium-gray);">
+                Si continúas teniendo problemas, no dudes en contactarnos.
+                <br>Estamos aquí para ayudarte.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Detectar tipo de error por código de estado (opcional)
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorCode = urlParams.get('code');
+        
+        if (errorCode) {
+            const errorMessages = {
+                '404': 'La página que buscas no existe.',
+                '403': 'No tienes permisos para acceder a esta página.',
+                '500': 'Error interno del servidor. Estamos trabajando para solucionarlo.',
+                '502': 'Servicio temporalmente no disponible.',
+                '503': 'Mantenimiento en progreso. Vuelve pronto.'
+            };
+            
+            const messageElement = document.querySelector('.error-message');
+            if (errorMessages[errorCode]) {
+                messageElement.textContent = errorMessages[errorCode];
+            }
+        }
+
+        // Log error para analytics (si tienes configurado)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'error_page_view', {
+                error_code: errorCode || 'unknown',
+                page_url: window.location.href
+            });
+        }
+    </script>
+</body>
+</html>
