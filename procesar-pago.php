@@ -107,218 +107,81 @@ try {
     
     $orderUrl = $OPENPAY_CONFIG['base_url'] . '/api/v2/orders';
     
-    // ===== 🧪 ESTRUCTURAS CON ITEMS (OBLIGATORIO) + DIFERENTES PRECIOS =====
-    $testStructures = [
-        
-        // 1. Items con precios normales
-        'items_normales' => [
-            'amount' => $totalAmount,
-            'currency' => 'ARS',
-            'external_id' => $orderId,
-            'description' => 'Compra Revestika - ' . $orderId,
-            'items' => $orderItems,
-            'customer' => [
-                'name' => $customer['name'],
-                'email' => $customer['email']
-            ],
-            'redirect_urls' => [
-                'success' => $SITE_CONFIG['success_url'] . '?order_id=' . $orderId,
-                'failure' => $SITE_CONFIG['failed_url'] . '?order_id=' . $orderId
-            ]
+    // ===== 💰 ESTRUCTURA CORRECTA PARA OPENPAY ARGENTINA (CENTAVOS) =====
+    // OpenPay Argentina requiere montos en centavos, no en pesos
+    $orderData = [
+        'amount' => $totalAmount * 100, // CONVERTIR A CENTAVOS
+        'currency' => 'ARS',
+        'external_id' => $orderId,
+        'description' => 'Compra Revestika - ' . $orderId,
+        'items' => array_map(function($item) {
+            return [
+                'id' => $item['id'],
+                'name' => $item['name'],
+                'price' => $item['price'] * 100,  // CONVERTIR A CENTAVOS
+                'quantity' => $item['quantity']
+            ];
+        }, $orderItems),
+        'customer' => [
+            'name' => $customer['name'],
+            'email' => $customer['email']
         ],
-        
-        // 2. Items con precios x100 (centavos)
-        'items_centavos' => [
-            'amount' => $totalAmount * 100,
-            'currency' => 'ARS',
-            'external_id' => $orderId,
-            'description' => 'Compra Revestika - ' . $orderId,
-            'items' => array_map(function($item) {
-                return [
-                    'id' => $item['id'],
-                    'name' => $item['name'],
-                    'price' => $item['price'] * 100,  // CENTAVOS
-                    'quantity' => $item['quantity']
-                ];
-            }, $orderItems),
-            'customer' => [
-                'name' => $customer['name'],
-                'email' => $customer['email']
-            ],
-            'redirect_urls' => [
-                'success' => $SITE_CONFIG['success_url'] . '?order_id=' . $orderId,
-                'failure' => $SITE_CONFIG['failed_url'] . '?order_id=' . $orderId
-            ]
-        ],
-        
-        // 3. Código de moneda numérico 
-        'codigo_032' => [
-            'amount' => $totalAmount,
-            'currency' => '032',
-            'external_id' => $orderId,
-            'description' => 'Compra Revestika - ' . $orderId,
-            'items' => $orderItems,
-            'customer' => [
-                'name' => $customer['name'],
-                'email' => $customer['email']
-            ],
-            'redirect_urls' => [
-                'success' => $SITE_CONFIG['success_url'] . '?order_id=' . $orderId,
-                'failure' => $SITE_CONFIG['failed_url'] . '?order_id=' . $orderId
-            ]
-        ],
-        
-        // 4. Estructura con unitPrice nested (como estaba antes)
-        'unitprice_nested' => [
-            'amount' => $totalAmount,
-            'currency' => 'ARS',
-            'external_id' => $orderId,
-            'description' => 'Compra Revestika - ' . $orderId,
-            'items' => array_map(function($item) {
-                return [
-                    'id' => $item['id'],
-                    'name' => $item['name'],
-                    'unitPrice' => [
-                        'currency' => 'ARS',
-                        'amount' => $item['price']
-                    ],
-                    'quantity' => $item['quantity']
-                ];
-            }, $orderItems),
-            'customer' => [
-                'name' => $customer['name'],
-                'email' => $customer['email']
-            ],
-            'redirect_urls' => [
-                'success' => $SITE_CONFIG['success_url'] . '?order_id=' . $orderId,
-                'failure' => $SITE_CONFIG['failed_url'] . '?order_id=' . $orderId
-            ]
-        ],
-        
-        // 5. Sin amount total (solo items)
-        'solo_items' => [
-            'currency' => 'ARS',
-            'external_id' => $orderId,
-            'description' => 'Compra Revestika - ' . $orderId,
-            'items' => $orderItems,
-            'customer' => [
-                'name' => $customer['name'],
-                'email' => $customer['email']
-            ],
-            'redirect_urls' => [
-                'success' => $SITE_CONFIG['success_url'] . '?order_id=' . $orderId,
-                'failure' => $SITE_CONFIG['failed_url'] . '?order_id=' . $orderId
-            ]
+        'redirect_urls' => [
+            'success' => $SITE_CONFIG['success_url'] . '?order_id=' . $orderId,
+            'failure' => $SITE_CONFIG['failed_url'] . '?order_id=' . $orderId
         ]
     ];
     
-    $successfulStructure = null;
-    $successfulResponse = null;
-    $allErrors = [];
+    logError("� Enviando order con amount en centavos: " . ($totalAmount * 100));
+    logError("💱 Currency: ARS");
+    logError("📦 Items count: " . count($orderData['items']));
+    logError("💵 First item price (centavos): " . ($orderItems[0]['price'] * 100));
     
-    // ===== 🔬 PROBAR ESTRUCTURAS CON ITEMS =====
-    foreach ($testStructures as $structureName => $orderData) {
-        
-        logError("🧪 === PROBANDO: $structureName ===");
-        logError("💰 Amount: " . ($orderData['amount'] ?? 'NO_AMOUNT'));
-        logError("💱 Currency: " . $orderData['currency']);
-        logError("📦 Items count: " . count($orderData['items']));
-        logError("💵 First item price: " . $orderData['items'][0]['price']);
-        
-        $ch = curl_init($orderUrl);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode($orderData),
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/json',
-                'Accept: application/json',
-                'Authorization: Bearer ' . $accessToken,
-                'User-Agent: Revestika/1.0'
-            ],
-            CURLOPT_TIMEOUT => 30
-        ]);
-        
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-        curl_close($ch);
-        
-        logError("📥 HTTP: $httpCode");
-        
-        if ($curlError) {
-            $allErrors[$structureName] = "cURL: $curlError";
-            continue;
-        }
-        
-        if ($httpCode === 200 || $httpCode === 201) {
-            $result = json_decode($response, true);
-            if ($result) {
-                logError("✅ ¡ÉXITO CON: $structureName!");
-                
-                // 🔍 ANALIZAR QUÉ PRECIO MUESTRA OPENPAY
-                $openpayAmount = null;
-                $amountPaths = ['amount', 'data.amount', 'total', 'data.total'];
-                
-                foreach ($amountPaths as $path) {
-                    $keys = explode('.', $path);
-                    $current = $result;
-                    
-                    foreach ($keys as $key) {
-                        if (isset($current[$key])) {
-                            $current = $current[$key];
-                        } else {
-                            $current = null;
-                            break;
-                        }
-                    }
-                    
-                    if ($current !== null && is_numeric($current)) {
-                        $openpayAmount = $current;
-                        logError("💰 OpenPay amount en '$path': $openpayAmount");
-                        break;
-                    }
-                }
-                
-                // 🔍 COMPARAR PRECIOS
-                $sentAmount = $orderData['amount'] ?? 'N/A';
-                $sentItemPrice = $orderData['items'][0]['price'];
-                
-                logError("🔍 COMPARACIÓN:");
-                logError("📤 Amount enviado: $sentAmount");
-                logError("📤 Item price enviado: $sentItemPrice");
-                logError("📥 OpenPay devuelve: " . ($openpayAmount ?? 'no_encontrado'));
-                
-                if ($openpayAmount && $sentAmount !== 'N/A') {
-                    $ratio = $sentAmount / $openpayAmount;
-                    logError("⚖️  Ratio: $ratio");
-                }
-                
-                $successfulStructure = $structureName;
-                $successfulResponse = $result;
-                break;
-            }
-        }
-        
-        // Capturar error
+    // Enviar orden a OpenPay
+    $ch = curl_init($orderUrl);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($orderData),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'Authorization: Bearer ' . $accessToken,
+            'User-Agent: Revestika/1.0'
+        ],
+        CURLOPT_TIMEOUT => 30
+    ]);
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+    
+    logError("📥 HTTP Response: $httpCode");
+    
+    if ($curlError) {
+        throw new Exception("cURL Error: $curlError");
+    }
+    
+    if ($httpCode !== 200 && $httpCode !== 201) {
         $errorDetail = "HTTP $httpCode";
         if ($response) {
             $errorData = json_decode($response, true);
             if ($errorData) {
                 $errorDetail .= " - " . json_encode($errorData);
             } else {
-                $errorDetail .= " - " . substr($response, 0, 100);
+                $errorDetail .= " - " . substr($response, 0, 200);
             }
         }
-        
-        logError("❌ Error: $errorDetail");
-        $allErrors[$structureName] = $errorDetail;
+        throw new Exception("OpenPay API Error: $errorDetail");
     }
     
-    if (!$successfulStructure) {
-        logError("❌ TODAS LAS ESTRUCTURAS CON ITEMS FALLARON");
-        throw new Exception('Todas las estructuras fallaron: ' . json_encode($allErrors));
+    $result = json_decode($response, true);
+    if (!$result) {
+        throw new Exception("Invalid JSON response from OpenPay");
     }
+    
+    logError("✅ Orden creada exitosamente en OpenPay");
     
     // Buscar URL de checkout
     $checkoutUrl = null;
@@ -329,7 +192,7 @@ try {
     
     foreach ($urlPaths as $path) {
         $keys = explode('.', $path);
-        $current = $successfulResponse;
+        $current = $result;
         
         foreach ($keys as $key) {
             if (isset($current[$key])) {
@@ -347,28 +210,28 @@ try {
     }
     
     if (!$checkoutUrl) {
-        throw new Exception('No se encontró URL de checkout');
+        throw new Exception('No se encontró URL de checkout en la respuesta de OpenPay');
     }
     
     // Actualizar orden
     updateOrderStatus($orderId, 'checkout_created', '', [
-        'openpay_id' => $successfulResponse['data']['id'] ?? $successfulResponse['id'] ?? '',
+        'openpay_id' => $result['data']['id'] ?? $result['id'] ?? '',
         'checkout_url' => $checkoutUrl,
-        'structure_used' => $successfulStructure
+        'amount_in_centavos' => $totalAmount * 100
     ]);
     
-    logError("✅ ORDEN EXITOSA - Estructura: $successfulStructure");
+    logError("✅ ORDEN EXITOSA - Amount enviado: " . ($totalAmount * 100) . " centavos (ARS " . $totalAmount . ")");
     
     echo json_encode([
         'success' => true,
         'checkout_url' => $checkoutUrl,
         'order_id' => $orderId,
         'debug' => [
-            'structure_used' => $successfulStructure,
-            'total_sent' => $testStructures[$successfulStructure]['amount'] ?? 'N/A',
-            'item_price_sent' => $testStructures[$successfulStructure]['items'][0]['price'],
-            'openpay_response' => $successfulResponse,
-            'all_errors' => $allErrors
+            'total_pesos' => $totalAmount,
+            'total_centavos_sent' => $totalAmount * 100,
+            'item_price_pesos' => $orderItems[0]['price'],
+            'item_price_centavos_sent' => $orderItems[0]['price'] * 100,
+            'openpay_response' => $result
         ]
     ]);
     
@@ -379,9 +242,7 @@ try {
     echo json_encode([
         'success' => false,
         'error' => $e->getMessage(),
-        'debug' => [
-            'all_errors' => $allErrors ?? []
-        ]
+        'order_id' => $orderId ?? null
     ]);
 }
 ?>

@@ -108,10 +108,14 @@ try {
     $transactionId = $webhookData['transaction_id'] ?? 
                      $webhookData['id'] ?? 
                      $webhookData['transaction']['id'] ?? '';
-    $amount = $webhookData['amount'] ?? 
-              $webhookData['transaction']['amount'] ?? 0;
+    $amountCentavos = $webhookData['amount'] ?? 
+                      $webhookData['transaction']['amount'] ?? 0;
     
-    logError("Webhook procesando - Order: $orderId, Status: $status, Event: $eventType, Amount: $amount");
+    // IMPORTANTE: OpenPay envía el monto en centavos, convertir a pesos para logging
+    $amountPesos = $amountCentavos / 100;
+    
+    logError("Webhook procesando - Order: $orderId, Status: $status, Event: $eventType");
+    logError("💰 Amount recibido: $amountCentavos centavos = ARS $amountPesos");
     
     // Verificar que la orden existe
     $orderData = getOrder($orderId);
@@ -134,7 +138,7 @@ try {
         case 'success':
             $newStatus = 'paid';
             $shouldNotifyCustomer = true;
-            logError("PAGO EXITOSO - Order: $orderId, Amount: $amount ARS");
+            logError("PAGO EXITOSO - Order: $orderId, Amount: ARS $amountPesos");
             break;
             
         case 'pending':
@@ -180,7 +184,8 @@ try {
         'webhook_received_at' => date('Y-m-d H:i:s'),
         'openpay_status' => $status,
         'event_type' => $eventType,
-        'amount_confirmed' => $amount,
+        'amount_confirmed_centavos' => $amountCentavos,
+        'amount_confirmed_pesos' => $amountPesos,
         'failure_reason' => $webhookData['failure_reason'] ?? null,
         'webhook_ip' => $clientIP
     ];
@@ -194,7 +199,7 @@ try {
     // Enviar notificaciones si es necesario
     if ($shouldNotifyCustomer && isset($orderData['customer']['email'])) {
         sendOrderNotification($orderId, $newStatus, $orderData['customer']['email']);
-        notifyWhatsApp($orderId, $newStatus, $amount);
+        notifyWhatsApp($orderId, $newStatus, "ARS $amountPesos");
     }
     
     // Acciones específicas según el estado
